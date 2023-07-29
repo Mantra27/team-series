@@ -6,7 +6,7 @@ const Bookschema = new mongoose.Schema({
     genre: { type: String, required: true },
     img: { type: String, required: true },
     summary: { type: String, required: true },
-    status: { type: Number, required: true }, // 1 - lend, 2 - borrow, 3 - sell/buy
+    status: { type: Number, required: true }, // 1 - lend, 2 - borrow, 3 - sell/buy, 4-not-available
     price: { type: Number, required: true },
     preffredPaymentMethod: { type: String, required: true },
     pastOwners: { type: Array, required: true },

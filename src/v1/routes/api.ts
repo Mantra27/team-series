@@ -9,6 +9,7 @@ const path = require('path');
 const fileUpload = require('express-fileupload');
 const User = require("../models/user");
 const Entry = require("../models/entry");
+const Book = require("../models/Book");
 const crypt0 = require('crypto');
 const pwdreset = require('../models/pwdresetwh');
 const proxy = require("../config/proxy");
@@ -38,7 +39,7 @@ router.post("/send-otp", async (req: any, res: any) => {
   const queryParams = {
     authorization: fast2smsToken,
     route: 'q',
-    message: `Hello world your OTP is ${otp}`,
+    message: `Hello user, your Series-Store OTP is ${otp}`,
     numbers: userPhoneNumber,
     flash: '0',
   };
@@ -65,26 +66,118 @@ router.post("/send-otp", async (req: any, res: any) => {
 
 });
 
-router.put("/verify-otp", (req: any, res: any) => {
-  const cookie = req.headers?.otptoken;
-  const otp = req.headers?.otp;
-  if (!cookie) return res.status(200).send({ status: 404, message: "invalid /verify-otp token from the client" });
-  if (!otp) return res.status(200).send({ status: 404, message: "invalid /verify-otp otp from the client" });
-  redisClient.get(`OTPTOKEN-${cookie}`).then((reply:any)=>{
-    if(!reply) return res.status(404).send({status: 404, message:"invalid/null otp token"})
-    if(Number(reply) != Number(otp)){
-      return res.status(200).send({status: 404, message: "otp-mismatch", otp: otp});
-    }
+router.get("/get-books", require("../middlewares/apiTokenVerifier"), async (req:any, res:any)=>{
+    await axios.get("http://localhost:8080/books").then((result:any)=>{
+      console.log(result.data)
+      return res.status(200).send({status: 200, message: "success", books: result.data});
+    });
+});
 
-    redisClient.del(`OTPTOKEN-${cookie}`).then((del:any)=>{
-      return res.status(200).send({status: 200, message: "success", otp: otp});
+router.get("/profile", require("../middlewares/apiTokenVerifier"), async (req:any, res:any)=>{
+  req.body = req.body.secret;
+  const username = req.body.username;
+  const email = req.body.email;
+  const img = req.body.email
+});
+
+router.post("/add-book", require("../middlewares/apiTokenVerifier"), (req:any, res:any)=>{
+    const {title=undefined, genre=undefined, author=undefined, summary=undefined, status=undefined, price=undefined} = req.body;
+    if(!title || !genre || !author || !summary || !status || !price) return res.status(404).send({status: 404, message: "param(s) missing from the client side"});
+    axios.post("http://localhost:8080/write", {
+
+      title: title,
+      genre: genre,
+      summary: summary,
+      status: status,
+      price: price
+
+    }).then((result:any)=>{
+      console.log({result})
     })
+});
 
+router.get("/get-book-by-title", require("../middlewares/apiTokenVerifier"), (req:any, res:any)=>{
+  const title = req.query.title;
+  axios(`http://localhost:8080/books/get?title=${title}`).then((result:any)=>{
+    return res.send(result.data)
   })
+});
+
+
+router.get("/get-book-by-author", require("../middlewares/apiTokenVerifier"), (req:any, res:any)=>{
+  const author = req.query.author;
+  axios(`http://localhost:8080/books/get?author=${author}`).then((result:any)=>{
+    return res.send(result.data)
+  })
+});
+
+router.get("/get-book-by-cat", require("../middlewares/apiTokenVerifier"), (req:any, res:any)=>{
+  const cat = req.query.cat;
+  axios(`http://localhost:8080/books/get?cat=${cat}`).then((result:any)=>{
+    return res.send(result.data)
+  })
+});
+
+router.get("/get-book", require("../middlewares/apiTokenVerifier"), async (req:any, res:any)=>{
+  const search = req.query.search;
+  let SET:any = [];
+
+  await axios(`https://teamseries.avineshtripathi.repl.co/books/get?cat=${search}`).then((result:any)=>{
+    if(result.data.length){
+      result.data.map((value:any, key:Number)=>{
+        SET.push(value)
+      })
+    }
+  })
+  await axios(`https://teamseries.avineshtripathi.repl.co/books/get?author=${search}`).then((result:any)=>{
+    if(result.data.length){
+      result.data.map((value:any, key:Number)=>{
+        SET.push(value)
+      })
+    }
+  })
+  await axios(`https://teamseries.avineshtripathi.repl.co/books/get?title=${search}`).then((result:any)=>{
+    if(result.data.length){
+      result.data.map((value:any, key:Number)=>{
+        SET.push(value)
+      })
+    }
+  });
+  return res.send(SET)
+
+});
+
+
+
+// router.put("/verify-otp", (req: any, res: any) => {
+//   const cookie = req.headers?.otptoken;
+//   const otp = req.headers?.otp;
+//   if (!cookie) return res.status(200).send({ status: 404, message: "invalid /verify-otp token from the client" });
+//   if (!otp) return res.status(200).send({ status: 404, message: "invalid /verify-otp otp from the client" });
+//   redisClient.get(`OTPTOKEN-${cookie}`).then((reply:any)=>{
+//     if(!reply) return res.status(404).send({status: 404, message:"invalid/null otp token"})
+//     if(Number(reply) != Number(otp)){
+//       return res.status(200).send({status: 404, message: "otp-mismatch", otp: otp});
+//     }
+
+//     redisClient.del(`OTPTOKEN-${cookie}`).then((del:any)=>{
+//       return res.status(200).send({status: 200, message: "success", otp: otp});
+//     })
+
+//   })
+// });
+
+router.get("/start-chat", require("../middlewares/apiTokenVerifier"), (req:any, res:any)=>{
+    const object = req.query.params.object;
+    const subject = req.body.body.username;
+    if(!object) return res.send("invalid subject/object");
 });
 
 router.post("/add-on-sale", require("../middlewares/apiTokenVerifier"), (req:any, res:any)=>{
     console.log("req.body", req.body);
+    const {title, summary, genre, status, price, currentOwner: {name, contactNumber, location, prefferedPaymentMethod}} = req.body;
+    if(!title || !summary || !genre || !status || !price || !name || !contactNumber || !location || !prefferedPaymentMethod) return res.status(404).send({status: 404, message: "missing param(s) from the client side"});
+
 });
 
 //-> /fp route is to request password reset

@@ -17,7 +17,11 @@ const UserSchema  = new mongoose.Schema({
     password :{
         type  : String,
     },
-    
+
+    img: {
+        type: String,
+    },
+
     contactNumber: {
         type:String,
         required: true
@@ -34,16 +38,6 @@ const UserSchema  = new mongoose.Schema({
     },
 
     lastLoginTime: {
-        type: String,
-        default: null
-    },
-
-    lastLoggedInIp:{
-        type: String,
-        default: null
-    },
-
-    payment_method:{
         type: String,
         default: null
     },

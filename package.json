@@ -20,6 +20,7 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "react-google-maps": "^9.4.5",
     "redis": "^4.6.7",
     "redis-client": "^0.3.5",
     "uuid": "^9.0.0"
@@ -28,7 +29,6 @@
     "doc": "docs",
     "test": "tests"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "ts-node src/v1/App.ts",
     "test": "echo \"Error: no test specified\" && exit 1"

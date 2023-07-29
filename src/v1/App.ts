@@ -11,6 +11,7 @@ const path = require('path'),
     index = require("./routes/index"),
     api = require("./routes/api"),
     auth = require("./routes/auth"),
+    {socketInit} = require("./routes/chat"),
     // initMQTT = require("./service/mqtt"),
 //util modules
     {mongodbConnect, redisClient} = require("./config/db"),
@@ -33,11 +34,13 @@ app.set('views', path.join(__dirname, 'views'));
 //loading static pages
 mongodbConnect.then(async (res:any)=>{  
 
+    socketInit();
     redisClient.on('error', (err:any) => console.log('Redis Client Error', err));
 
     await redisClient.connect().then((redisConnected:any)=>{
         console.log("*:Redis (success)")
-    })
+    });
+    
 
     //all the root backend endpoints
     app.use('/auth', auth);

@@ -1,12 +1,22 @@
 const mongoose = require("mongoose")
-const crimeSchema = new mongoose.Schema({
-    type: { type: String, required: true }, // Type of incident (e.g., theft, assault, vandalism)
-    location: { type: [Number], required: true }, // [longitude, latitude]
-    date: { type: Date, required: true },
-    // You can add other relevant crime data fields as needed
+const chats = new mongoose.Schema({
+
+    subjects: [{
+      username: { type: String, required: true },
+      email: { type: String, required: true },
+    }],
+
+    chatId: { type: String, required: true },
+
+    messages: [{
+      text: { type: String, required: true },
+      sender: { type: String, required: true },
+      time: { type: String, required: true },
+    }],
+
   });
   
-  const Crime = mongoose.model('Crime', crimeSchema);
+  const Chat = mongoose.model('chats', chats);
   
-  module.exports = Crime;
+  module.exports = Chat;
   export {}
