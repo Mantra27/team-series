@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/api/resetpw" method="POST" enctype="application/x-www-form-urlencoded">
+        New Password: <input type="password" name="password" id="pw">
+        <p>
+        Confirm New Password: <input type="password" name="confirmPassword" id="cpw">
+        </p>
+        Token(read-only): <input type="text" name="portalToken" readonly id="tokendiv" width="300px"/>
+        <p>
+            <input type="submit" value="SUBMIT" >
+        <script>
+            const portal = '<%=portal%>';
+            console.log(portal)
+            document.getElementById("tokendiv").value = portal;
+        </script>
+    </form>
+</body>
+</html>

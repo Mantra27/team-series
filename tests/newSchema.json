@@ -1,0 +1,27 @@
+{
+    "response": {
+        "method": "live",
+        "data": [
+            {
+                "Header": "controller_pv1",
+                "values": [1, 2, 3, .. 10, 12, "offline"]
+                "date": [1, 2, 3, ... 10],
+            },
+            {
+                "Header": "controller_pv1",
+                "values": [1, 2, 3, .. 10],
+                "date": [1, 2, 3, ... 10],
+            },
+            {
+                "Header": "controller_pv1",
+                "values": [1, 2, 3, .. 10],
+                "date": [1, 2, 3, ... 10],
+            },
+            {
+                "Header": "controller_pv1",
+                "values": [1, 2, 3, .. 10, "offline"]
+            },
+            
+        ]
+    }
+}

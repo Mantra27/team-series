@@ -1,0 +1,37 @@
+{
+  "name": "team_series",
+  "version": "1.0.0",
+  "description": "Team series project",
+  "main": "/src/v1/App.ts",
+  "author": "Mantra & Team",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.1",
+    "otp-gen-agent": "^1.1.2",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "redis": "^4.6.7",
+    "redis-client": "^0.3.5",
+    "uuid": "^9.0.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "ts-node src/v1/App.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": []
+}
